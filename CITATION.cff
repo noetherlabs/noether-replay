@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use Noether Replay, please cite this software and the original telemetry dataset."
+title: "Noether Replay: optical telemetry reconstruction and evidence qualification"
+type: software
+authors:
+  - name: "Noether Labs"
+version: 0.1.0
+date-released: 2026-10-24
+url: "https://github.com/noetherlabs/noether-replay"
+repository-code: "https://github.com/noetherlabs/noether-replay"
+license: Apache-2.0

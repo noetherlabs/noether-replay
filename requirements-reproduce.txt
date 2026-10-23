@@ -1,0 +1,4 @@
+# Versions used to produce the retained examples on Python 3.11.15.
+numpy==2.4.6
+astropy==8.0.1
+aotpy==3.2.1
