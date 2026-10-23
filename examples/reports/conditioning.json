@@ -1,0 +1,11 @@
+{
+  "adjacent_output_covariance_m2": 2.5920000000000005e-18,
+  "diagonal_only_output_variance_m2": 2e-18,
+  "evidence": "synthetic analytic AR(1)",
+  "formula": "Var[(x_t + x_(t-1))/2] = sigma^2 (1 + rho) / 2",
+  "full_output_variance_m2": 3.6e-18,
+  "input_variance_m2": 4e-18,
+  "operator": "two-sample mean followed by factor-two decimation; valid support",
+  "relative_variance_underestimate": 0.4444444444444444,
+  "rho": 0.8
+}

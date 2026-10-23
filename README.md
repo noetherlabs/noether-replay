@@ -54,6 +54,17 @@ never overwritten.
 See the [data contract](docs/data-contract.md), [evaluation modes](docs/evaluation-modes.md)
 and [reproducible examples](docs/examples.md).
 
+## Retained examples
+
+| Example | Result |
+| --- | --- |
+| [Synthetic event reconstruction](examples/reports/synthetic.md) | 72 known events; an omitted frame identifier; four observations outside calibration validity. |
+| [Public PAPYRUS recording](examples/reports/papyrus.md) | Three 200-sample telemetry arrays imported. Event times are absent, so no exact event sequence is inferred. |
+| [Correlated-noise conditioning](examples/reports/conditioning.json) | In the declared synthetic AR(1) case, ignoring temporal correlation understates the variance after averaging by 44.44%. |
+
+The [example manifest](examples/reports/manifest.json) records the implementation
+commit, input digests, dependency versions and output digests.
+
 ## Scientific scope
 
 This version qualifies the completeness and internal consistency of telemetry.

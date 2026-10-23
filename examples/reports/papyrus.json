@@ -1,0 +1,179 @@
+{
+  "clock_domains": [],
+  "event_count": 0,
+  "findings": [
+    {
+      "code": "unknown_units",
+      "count": 1,
+      "detail": "Physical units are not established by the source.",
+      "stream_id": "loop:20230525_2304_20B1FBD7:commands"
+    },
+    {
+      "code": "unknown_clock_uncertainty",
+      "count": 1,
+      "detail": "Nominal timestamps cannot establish an exact causal ordering.",
+      "stream_id": "loop:20230525_2304_20B1FBD7:commands"
+    },
+    {
+      "code": "missing_event_times",
+      "count": 200,
+      "detail": "These samples have no exposure, availability or actuation event times.",
+      "stream_id": "loop:20230525_2304_20B1FBD7:commands"
+    },
+    {
+      "code": "unknown_command_semantics",
+      "count": 200,
+      "detail": "The source does not establish whether these commands were requested or physically applied.",
+      "stream_id": "loop:20230525_2304_20B1FBD7:commands"
+    },
+    {
+      "code": "unknown_frame_identity",
+      "count": 200,
+      "detail": "Array position is retained; missing frames cannot be inferred from it.",
+      "stream_id": "loop:20230525_2304_20B1FBD7:commands"
+    },
+    {
+      "code": "unknown_units",
+      "count": 1,
+      "detail": "Physical units are not established by the source.",
+      "stream_id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:measurements"
+    },
+    {
+      "code": "unknown_clock_uncertainty",
+      "count": 1,
+      "detail": "Nominal timestamps cannot establish an exact causal ordering.",
+      "stream_id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:measurements"
+    },
+    {
+      "code": "missing_event_times",
+      "count": 200,
+      "detail": "These samples have no exposure, availability or actuation event times.",
+      "stream_id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:measurements"
+    },
+    {
+      "code": "missing_availability",
+      "count": 200,
+      "detail": "Causal controller replay requires observation availability, not just sampling frequency.",
+      "stream_id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:measurements"
+    },
+    {
+      "code": "unknown_frame_identity",
+      "count": 200,
+      "detail": "Array position is retained; missing frames cannot be inferred from it.",
+      "stream_id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:measurements"
+    },
+    {
+      "code": "unqualified_calibration_interval",
+      "count": 200,
+      "detail": "No unique calibration epoch covers the complete exposure and timing uncertainty.",
+      "stream_id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:measurements"
+    },
+    {
+      "code": "unknown_units",
+      "count": 1,
+      "detail": "Physical units are not established by the source.",
+      "stream_id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:pixels"
+    },
+    {
+      "code": "unknown_clock_uncertainty",
+      "count": 1,
+      "detail": "Nominal timestamps cannot establish an exact causal ordering.",
+      "stream_id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:pixels"
+    },
+    {
+      "code": "missing_event_times",
+      "count": 200,
+      "detail": "These samples have no exposure, availability or actuation event times.",
+      "stream_id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:pixels"
+    },
+    {
+      "code": "missing_availability",
+      "count": 200,
+      "detail": "Causal controller replay requires observation availability, not just sampling frequency.",
+      "stream_id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:pixels"
+    },
+    {
+      "code": "unknown_frame_identity",
+      "count": 200,
+      "detail": "Array position is retained; missing frames cannot be inferred from it.",
+      "stream_id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:pixels"
+    },
+    {
+      "code": "unqualified_calibration_interval",
+      "count": 200,
+      "detail": "No unique calibration epoch covers the complete exposure and timing uncertainty.",
+      "stream_id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:pixels"
+    }
+  ],
+  "limitations": [
+    "Recording consistency is not instrument qualification or controller validation.",
+    "Calibration hashes bind references; calibration accuracy is not tested.",
+    "Recorded closed-loop outcomes cannot evaluate a different controller.",
+    "Hashes establish content consistency, not source authenticity."
+  ],
+  "mode": "observational",
+  "recording_id": "aot-4e1568033171ad2d",
+  "recording_sha256": "8d6dc9fa1c8e3b384b7667beaa741934eab217e85270687d10f00640ebc82f09",
+  "schema": "noether-replay-report/1",
+  "software_version": "0.1.0",
+  "source": {
+    "adapter": "noether_replay.aot",
+    "adapter_version": "1",
+    "aotpy_version": "3.2.1",
+    "format": "AOT FITS",
+    "source_bytes": 75666240,
+    "source_sha256": "4e1568033171ad2d17b6e20d9c05be02a29c00894f4e6a6962075cbcdaa074d3",
+    "timing_policy": "Source timestamps retained; event times and clock uncertainty not inferred"
+  },
+  "status": "evidence_gaps",
+  "streams": [
+    {
+      "calibration_covered_samples": null,
+      "dtype": ">f8",
+      "id": "loop:20230525_2304_20B1FBD7:commands",
+      "kind": "command_recorded",
+      "known_event_times": {},
+      "nonfinite_values": 0,
+      "samples": 200,
+      "shape": [
+        200,
+        241
+      ],
+      "units": null,
+      "unrepresented_frame_ids": null
+    },
+    {
+      "calibration_covered_samples": 0,
+      "dtype": ">f8",
+      "id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:measurements",
+      "kind": "wfs_measurements",
+      "known_event_times": {},
+      "nonfinite_values": 0,
+      "samples": 200,
+      "shape": [
+        200,
+        2,
+        4669
+      ],
+      "units": null,
+      "unrepresented_frame_ids": null
+    },
+    {
+      "calibration_covered_samples": 0,
+      "dtype": ">i2",
+      "id": "wfs:ACE.PYRAMID.REMOTE.Wfs.25:pixels",
+      "kind": "wfs_pixels",
+      "known_event_times": {},
+      "nonfinite_values": 0,
+      "samples": 200,
+      "shape": [
+        200,
+        240,
+        240
+      ],
+      "units": null,
+      "unrepresented_frame_ids": null
+    }
+  ],
+  "timeline_sha256": "6b3b649711496a8cf3b8a1a750a5fe1636bb15cdb3953d1df44671f4e98ccd78"
+}

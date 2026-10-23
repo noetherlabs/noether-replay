@@ -1,0 +1,64 @@
+{
+  "artifacts": [
+    {
+      "bytes": 2897,
+      "file": "synthetic.json",
+      "sha256": "31a1131ccbfe4f05772c4326d857359d0c2c45e1daae99e6263f8cdddb13139a"
+    },
+    {
+      "bytes": 1413,
+      "file": "synthetic.md",
+      "sha256": "0bfb2c2c6238887a72a21c16a8d7c944fe36a49b4ea8aa10d79141afb1f965db"
+    },
+    {
+      "bytes": 5971,
+      "file": "papyrus.json",
+      "sha256": "e35c71e1a7e998fc4835024e2b75e3dc5ed4a5e8401cf106d82f61171729670b"
+    },
+    {
+      "bytes": 3456,
+      "file": "papyrus.md",
+      "sha256": "783ed180e1e6ecd7e4b63bdf7c9654f61eb479bdd62aa25e253069a12e5856df"
+    },
+    {
+      "bytes": 2150,
+      "file": "shadow.json",
+      "sha256": "27b24757605828f067116aeb8f03845c67c9c5376dba49c9f125141bea66c163"
+    },
+    {
+      "bytes": 433,
+      "file": "conditioning.json",
+      "sha256": "c2d6f868a09d6421d2b21f88e41883b14fb7c8ac91172910cb42666ff4d8907e"
+    }
+  ],
+  "environment": {
+    "machine": "arm64",
+    "packages": {
+      "aotpy": "3.2.1",
+      "astropy": "8.0.1",
+      "noether-ao-replay": "0.1.0",
+      "numpy": "2.4.6"
+    },
+    "python": "3.11.15",
+    "system": "Darwin"
+  },
+  "evidence_scope": "Software examples and observational qualification of one public demonstration recording; no controller-performance or instrument-safety result.",
+  "implementation_commit": "d90dfc57ff01471ba2b3557ec51e8438b7848299",
+  "reproduction": "Each artifact was generated twice with the installed wheel in this environment and compared byte-for-byte. Cross-platform floating-point bitwise identity is not claimed.",
+  "schema": "noether-replay-examples/1",
+  "sources": [
+    {
+      "file": "examples/synthetic.json",
+      "kind": "synthetic software fixture",
+      "sha256": "aa33616d9ff867e4808eddae98a0ee60b425c1157043535a9a146a008b46fd89"
+    },
+    {
+      "bytes": 75666240,
+      "doi": "10.5281/zenodo.8192742",
+      "file": "PAPYRUS_PWFS_20230525_2304_20B1FBD7.fits",
+      "kind": "public instrument demonstration recording",
+      "license": "CC-BY-4.0",
+      "sha256": "4e1568033171ad2d17b6e20d9c05be02a29c00894f4e6a6962075cbcdaa074d3"
+    }
+  ]
+}

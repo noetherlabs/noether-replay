@@ -1,0 +1,106 @@
+{
+  "clock_domains": [
+    "synthetic-instrument"
+  ],
+  "event_count": 72,
+  "findings": [
+    {
+      "code": "frame_id_gaps",
+      "count": 1,
+      "detail": "Unrepresented integer frame IDs; this is not proof of detector frame loss without the counter contract.",
+      "stream_id": "dm-applied"
+    },
+    {
+      "code": "frame_id_gaps",
+      "count": 1,
+      "detail": "Unrepresented integer frame IDs; this is not proof of detector frame loss without the counter contract.",
+      "stream_id": "dm-requested"
+    },
+    {
+      "code": "frame_id_gaps",
+      "count": 1,
+      "detail": "Unrepresented integer frame IDs; this is not proof of detector frame loss without the counter contract.",
+      "stream_id": "wfs"
+    },
+    {
+      "code": "unqualified_calibration_interval",
+      "count": 4,
+      "detail": "No unique calibration epoch covers the complete exposure and timing uncertainty.",
+      "stream_id": "wfs"
+    }
+  ],
+  "limitations": [
+    "Recording consistency is not instrument qualification or controller validation.",
+    "Calibration hashes bind references; calibration accuracy is not tested.",
+    "Recorded closed-loop outcomes cannot evaluate a different controller.",
+    "Hashes establish content consistency, not source authenticity."
+  ],
+  "mode": "observational",
+  "recording_id": "synthetic-calibration-expiry",
+  "recording_sha256": "4cd38b1958e79fb1b74086edd6d043659f855b13f09cb38eff319a1969decdfa",
+  "schema": "noether-replay-report/1",
+  "software_version": "0.1.0",
+  "source": {
+    "generator": "examples/synthetic.json",
+    "kind": "synthetic",
+    "version": "1"
+  },
+  "status": "evidence_gaps",
+  "streams": [
+    {
+      "calibration_covered_samples": null,
+      "dtype": "<f8",
+      "id": "dm-applied",
+      "kind": "command_applied",
+      "known_event_times": {
+        "effective": 12
+      },
+      "nonfinite_values": 0,
+      "samples": 12,
+      "shape": [
+        12,
+        1
+      ],
+      "units": "m",
+      "unrepresented_frame_ids": 1
+    },
+    {
+      "calibration_covered_samples": null,
+      "dtype": "<f8",
+      "id": "dm-requested",
+      "kind": "command_requested",
+      "known_event_times": {
+        "completed": 12,
+        "issued": 12
+      },
+      "nonfinite_values": 0,
+      "samples": 12,
+      "shape": [
+        12,
+        1
+      ],
+      "units": "m",
+      "unrepresented_frame_ids": 1
+    },
+    {
+      "calibration_covered_samples": 8,
+      "dtype": "<f8",
+      "id": "wfs",
+      "kind": "wfs_measurements",
+      "known_event_times": {
+        "available": 12,
+        "exposure_end": 12,
+        "exposure_start": 12
+      },
+      "nonfinite_values": 0,
+      "samples": 12,
+      "shape": [
+        12,
+        2
+      ],
+      "units": "m",
+      "unrepresented_frame_ids": 1
+    }
+  ],
+  "timeline_sha256": "b0ab6dbe39b446d1ad1f4cd53d868cc8288f0a147ab7fe7ff7f2af57848ebfa8"
+}

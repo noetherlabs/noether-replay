@@ -5,6 +5,12 @@ synthetic event metadata, qualification of incomplete instrument telemetry, and
 the effect of noise correlations on preprocessing uncertainty. None measures the
 performance of an alternative closed-loop controller.
 
+Retained JSON and Markdown outputs are in [examples/reports](../examples/reports).
+Their [manifest](../examples/reports/manifest.json) binds each output to its
+source digest, implementation commit and dependency versions. Each was generated
+twice from the installed package and compared byte-for-byte in the recorded
+environment. Cross-platform floating-point bitwise identity is not assumed.
+
 ## Synthetic event reconstruction
 
 ```sh
@@ -17,10 +23,14 @@ streams. It declares 72 event timestamps in one clock, intentionally omits frame
 ID 5, and ends the calibration interval before the last four WFS exposures.
 Replay preserves all records, reports the absent identifier in each stream, and
 assigns temporal calibration coverage to eight of the twelve observations.
+See the [retained report](../examples/reports/synthetic.md) and its
+[machine-readable output](../examples/reports/synthetic.json).
 
 The shadow example produces hypothetical commands from those recorded
 observations. It does not change their subsequent values or claim an improved
 wavefront error.
+The [retained shadow result](../examples/reports/shadow.json) includes policy
+identity and explicitly marks its outcome as unassessed.
 
 ## Public PAPYRUS recording
 
@@ -55,6 +65,10 @@ semantics.
 This is a finding about the metadata in this particular demonstration file, not
 a defect claim about PAPYRUS or the AOT standard. AOT permits partial recordings;
 additional instrument metadata may establish relationships absent here.
+The [retained report](../examples/reports/papyrus.md) and
+[machine-readable output](../examples/reports/papyrus.json) contain 17 findings
+about missing evidence across the three streams; these are not 17 demonstrated
+instrument faults.
 
 ## Correlated-noise conditioning
 
@@ -73,3 +87,5 @@ These values follow analytically from the declared synthetic covariance and are
 also checked by deterministic numerical tests. They demonstrate why conditioning
 must propagate temporal correlations. They are not measurements of PAPYRUS noise,
 a newly discovered covariance law, or evidence of controller superiority.
+The [retained numerical output](../examples/reports/conditioning.json) records
+the input parameters, covariance terms and analytic formula.
