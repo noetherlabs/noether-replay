@@ -89,3 +89,23 @@ must propagate temporal correlations. They are not measurements of PAPYRUS noise
 a newly discovered covariance law, or evidence of controller superiority.
 The [retained numerical output](../examples/reports/conditioning.json) records
 the input parameters, covariance terms and analytic formula.
+
+## Conditioning with timing and calibration context
+
+```sh
+python examples/conditioned_observations.py
+```
+
+This example selects six two-channel observations from the synthetic recording
+and forms three disjoint pair means. It supplies a separable covariance with
+temporal and cross-channel correlations. Temporal correlation uses actual fixture
+timestamp separations, preserving the deliberately omitted frame interval.
+The source values and covariance model are synthetic; no noise parameters are
+estimated from instrument data.
+
+Each mean retains its contributing indices, propagated joint covariance,
+availability admission bound and source calibration epoch. Explicit fixture
+completion times allow three hypothetical policy commands. A second window with
+unknown completion times and a window spanning calibration expiry are both
+withheld before policy execution. Neither withholding nor successful shadow
+execution measures closed-loop performance.

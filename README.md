@@ -49,7 +49,7 @@ never overwritten.
 | Calibration epochs | Assigns an epoch only when it uniquely covers the complete exposure and its timing uncertainty. |
 | Evidence binding | Hashes array dtype, shape and exact bytes together with timing, calibration and source metadata. |
 | Shadow policies | Computes hypothetical commands from ordered observations without assigning recorded outcomes to those commands. |
-| Noise conditioning | Propagates full temporal covariance through finite linear filtering, selection and decimation operators. |
+| Noise conditioning | Propagates temporal and cross-channel covariance; binds filtered windows to source samples, availability constraints and calibration epochs. |
 
 See the [data contract](docs/data-contract.md), [evaluation modes](docs/evaluation-modes.md)
 and [reproducible examples](docs/examples.md).
@@ -89,6 +89,7 @@ python -m pip install -e '.[aot,dev]'
 python -m pytest -q
 ruff check .
 python examples/conditioning.py
+python examples/conditioned_observations.py
 ```
 
 Tests cover actual AOT FITS round trips, missing metadata, calibration boundaries,

@@ -32,6 +32,14 @@ recording the policy's source revision and configuration with the result.
 This is sequential offline evaluation, not a real-time execution benchmark.
 Recorded availability does not measure policy execution latency.
 
+For conditioned observations, validation also reconstructs source dependencies
+and covariance. Every output requires a single qualifying source calibration
+epoch and explicit availability after all contributing inputs. Missing or mixed
+calibration context is rejected before invoking the policy. These checks do not
+validate a policy's use of filtered coordinates: its observation model must apply
+the same sample/channel selection and linear operator. The policy remains a
+hypothetical action generator, including when all conditioning checks pass.
+
 ## Counterfactual evaluation
 
 Changing a command generally changes subsequent wavefront measurements. An

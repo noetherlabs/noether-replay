@@ -11,7 +11,7 @@ import numpy as np
 
 from . import __version__
 from .model import Recording, canonical_json
-from .replay import calibration_assignment, events
+from .replay import _calibration_assignment, events
 
 
 def build_report(recording: Recording, *, mode: str = "observational") -> dict:
@@ -33,6 +33,7 @@ def build_report(recording: Recording, *, mode: str = "observational") -> dict:
 
     for stream in sorted(recording.streams, key=lambda s: s.id):
         size = len(stream.values)
+        conditioning = stream.metadata.get("conditioning")
         nonfinite = int(np.count_nonzero(~np.isfinite(stream.values)))
         finding(
             "nonfinite_values",
@@ -91,12 +92,13 @@ def build_report(recording: Recording, *, mode: str = "observational") -> dict:
                 "Command issue time is not established for these requests.",
             )
         if stream.frame_ids is None:
-            finding(
-                "unknown_frame_identity",
-                stream.id,
-                size,
-                "Array position is retained; missing frames cannot be inferred from it.",
-            )
+            if conditioning is None:
+                finding(
+                    "unknown_frame_identity",
+                    stream.id,
+                    size,
+                    "Array position is retained; missing frames cannot be inferred from it.",
+                )
             missing = None
         else:
             ids = [int(x) for x in stream.frame_ids]
@@ -155,7 +157,7 @@ def build_report(recording: Recording, *, mode: str = "observational") -> dict:
         )
         applicable = stream.kind in {"wfs_measurements", "wfs_pixels", "science"}
         coverage = (
-            sum(calibration_assignment(recording, stream, i) is not None for i in range(size))
+            sum(_calibration_assignment(recording, stream, i) is not None for i in range(size))
             if applicable
             else None
         )
@@ -164,7 +166,9 @@ def build_report(recording: Recording, *, mode: str = "observational") -> dict:
                 "unqualified_calibration_interval",
                 stream.id,
                 size - coverage,
-                "No unique calibration epoch covers the complete exposure and timing uncertainty.",
+                "No unique source calibration epoch covers all contributing exposures and their hull."
+                if conditioning is not None
+                else "No unique calibration epoch covers the complete exposure and timing uncertainty.",
             )
         summaries.append(
             {
@@ -180,6 +184,20 @@ def build_report(recording: Recording, *, mode: str = "observational") -> dict:
                 "calibration_covered_samples": coverage,
             }
         )
+        if conditioning is not None:
+            summaries[-1]["conditioning"] = json.loads(
+                canonical_json(
+                    {
+                        "schema": conditioning["schema"],
+                        "source_recording_sha256": conditioning["source_recording_sha256"],
+                        "source_stream_id": conditioning["source_stream_id"],
+                        "sample_indices": conditioning["sample_indices"],
+                        "channel_indices": conditioning["channel_indices"],
+                        "covariance_provenance": conditioning["covariance_provenance"],
+                        "calibration_scope": "contributing source epochs; transformed model not validated",
+                    }
+                )
+            )
     clocks = sorted({event["clock_id"] for event in timeline})
     finding(
         "multiple_clock_domains",
@@ -255,6 +273,16 @@ def markdown_report(report: dict) -> str:
         lines.append(
             f"| {cell(stream['id'])} | {stream['samples']} | {cell(stream['units'] or 'unknown')} | {stream['calibration_covered_samples'] if stream['calibration_covered_samples'] is not None else 'n/a'} |"
         )
+    for stream in report["streams"]:
+        if "conditioning" in stream:
+            lines += [
+                "",
+                f"**{cell(stream['id'])}** is a conditioned window of "
+                f"**{cell(stream['conditioning']['source_stream_id'])}**. "
+                "Its calibration coverage refers to contributing source exposures; "
+                "it does not validate a transformed observation model. Covariance is supplied, "
+                "not estimated from these data.",
+            ]
     lines += ["", "## Findings", ""]
     if not report["findings"]:
         lines.append(

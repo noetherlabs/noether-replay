@@ -53,7 +53,20 @@ def calibration_assignment(recording: Recording, stream: Stream, index: int) -> 
 
     An epoch product digest is an asserted reference, not evidence that the
     calibration is accurate. This operation establishes temporal coverage only.
+    For a conditioned window this is the common contributing source epoch;
+    it does not make an untransformed calibration a model for filtered data.
     """
+    if "conditioning" in stream.metadata:
+        recording.validate()
+        if not any(member is stream for member in recording.streams):
+            raise ValueError("Conditioned calibration assignment requires the owning recording")
+    return _calibration_assignment(recording, stream, index)
+
+
+def _calibration_assignment(recording: Recording, stream: Stream, index: int) -> str | None:
+    """Internal path for consumers that have already validated the recording."""
+    if "conditioning" in stream.metadata:
+        return stream.metadata["conditioning"]["calibration_epoch_ids"][index]
     if stream.uncertainty_ns is None:
         return None
     start = stream.times_ns.get("exposure_start")
@@ -106,6 +119,11 @@ def run_shadow(
     if len(streams) != 1 or streams[0].kind not in {"wfs_measurements", "wfs_pixels"}:
         raise ValueError("Shadow mode requires one WFS observation stream")
     stream = streams[0]
+    conditioning = stream.metadata.get("conditioning")
+    if conditioning is not None and any(
+        epoch is None for epoch in conditioning["calibration_epoch_ids"]
+    ):
+        raise ValueError("Conditioned shadow observations require one calibration epoch per window")
     if not len(stream.values):
         raise ValueError("Shadow replay requires at least one observation")
     times = stream.times_ns.get("available")

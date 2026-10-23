@@ -220,6 +220,11 @@ class Recording:
         canonical_json(self.calibrations)
         canonical_json(self.metadata)
         canonical_json(self.provenance)
+        # Import lazily: conditioning reconstructs a raw parent Recording and
+        # reuses this validation without introducing an alternate schema path.
+        from .conditioned import validate_conditioned
+
+        validate_conditioned(self)
 
     def manifest(self) -> dict[str, Any]:
         self.validate()

@@ -21,3 +21,4 @@ jobs:
       - run: python -m pytest -q
       - run: noether-replay examples/synthetic.json --format markdown
       - run: python examples/conditioning.py
+      - run: python examples/conditioned_observations.py

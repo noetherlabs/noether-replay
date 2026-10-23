@@ -81,3 +81,56 @@ composition follows application order. FIR filters use valid support, retaining
 the induced cross-sample covariance. Transforming values without transforming
 their covariance changes the observation model and must not be treated as neutral
 preprocessing.
+
+### Conditioned observation windows
+
+`noether_replay.conditioned.condition_observations` appends a derived WFS stream
+to a recording. Select source sample indices and C-order flattened channel
+indices explicitly, or use the complete bounded window. A dimensionless temporal
+operator $A$ acts identically on each selected channel. If there are $c$ selected
+channels, the joint sample-major transformation is
+$J=A\otimes I_c$ and the output covariance is $J R J^\mathsf{T}$. The supplied
+$R$ must cover the full selected input window, including temporal and cross-channel
+correlations. Values retain their source units; covariance has squared units.
+
+Both joint input and output dimensions are limited to 512. The covariance must
+be finite, symmetric and positive semidefinite within scale-relative float64
+roundoff tolerance. No physical noise floor or diagonal jitter is introduced.
+The caller supplies nonempty covariance provenance. This identifies an asserted
+noise model; it does not establish that the model fits the recording. Operators
+and selections are treated as fixed. Data-adaptive choices require a covariance
+model conditional on those choices; this transformation does not correct selection
+bias. Model predictions must use the same sample selection, channel selection
+and operator as the observations.
+
+Each output row retains its exact nonzero source support and the individual
+contributing exposure intervals. It does not represent a new detector exposure
+and receives no synthetic exposure timestamps or hardware frame ID. Explicit
+output availability uses the source clock and uncertainty bound. Its lower
+uncertainty bound must be at least the latest contributing input's upper
+availability bound. `ready_not_before_ns` records that conservative admission
+bound, not measured processing completion. Missing availability or uncertainty
+cannot be filled from sample rate, filter length or array position.
+
+An output row has source calibration context only when every contributor has
+the same unambiguous epoch and that epoch also covers the complete exposure hull
+and uncertainty. Cross-epoch windows remain unqualified. Raw calibration epochs
+are unchanged; the descriptor carries the common source epoch ID. This temporal
+context does not make the original calibration product valid for filtered data.
+
+The reserved `conditioning` metadata object uses schema
+`noether-replay/conditioning/1`. It binds the raw recording digest, selected
+coordinates, operator, supplied and propagated covariances, provenance, source
+support and timing/calibration context. All such descriptors together are limited
+to 16 MiB. Recording validation reconstructs their numeric and metadata fields
+before reporting or shadow evaluation. Independent derived streams share the same
+raw parent; chained derivations must first be composed against raw data.
+Reconstruction compares each numeric coordinate at its own relative float64
+scale; exact zeros must reproduce as zeros. A near-zero discrepancy across
+numerical libraries can therefore cause rejection rather than silently relaxing
+the tolerance using an unrelated large channel.
+
+The returned recording copies its calibration, metadata and provenance
+containers but shares original streams. Mutating a source stream invalidates its
+derived bindings. Digests establish consistency, not authentication; coordinated
+changes to an input and its declared transformation are a new recording.
