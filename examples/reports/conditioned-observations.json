@@ -1,0 +1,152 @@
+{
+  "calibration_expiry_window": {
+    "policy_calls": 0,
+    "status": "withheld"
+  },
+  "conditioned_recording_sha256": "175fda1b6e1fac27966885ad9970c123ca5959aeaaca2c0f76ce38f28cc3c0d5",
+  "declared_output_available_ns": [
+    1250000,
+    3250000,
+    6250000
+  ],
+  "evidence": "synthetic software example; no instrument or controller-performance result",
+  "input_samples": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "output_covariance_m2": [
+    [
+      3.6e-18,
+      9e-19,
+      2.5920000000000005e-18,
+      6.480000000000001e-19,
+      1.5114240000000003e-18,
+      3.778560000000001e-19
+    ],
+    [
+      9e-19,
+      7.2e-18,
+      6.480000000000001e-19,
+      5.184000000000001e-18,
+      3.778560000000001e-19,
+      3.0228480000000006e-18
+    ],
+    [
+      2.5920000000000005e-18,
+      6.480000000000001e-19,
+      3.6e-18,
+      9e-19,
+      2.3616000000000006e-18,
+      5.904000000000001e-19
+    ],
+    [
+      6.480000000000001e-19,
+      5.184000000000001e-18,
+      9e-19,
+      7.2e-18,
+      5.904000000000001e-19,
+      4.723200000000001e-18
+    ],
+    [
+      1.5114240000000003e-18,
+      3.778560000000001e-19,
+      2.3616000000000006e-18,
+      5.904000000000001e-19,
+      3.2800000000000003e-18,
+      8.200000000000001e-19
+    ],
+    [
+      3.778560000000001e-19,
+      3.0228480000000006e-18,
+      5.904000000000001e-19,
+      4.723200000000001e-18,
+      8.200000000000001e-19,
+      6.5600000000000005e-18
+    ]
+  ],
+  "output_values_m": [
+    [
+      5e-10,
+      -5e-10
+    ],
+    [
+      2.5e-09,
+      -2.5e-09
+    ],
+    [
+      4.500000000000001e-09,
+      -4.500000000000001e-09
+    ]
+  ],
+  "ready_not_before_ns": [
+    1200100,
+    3200100,
+    6200100
+  ],
+  "shadow": {
+    "clock_id": "synthetic-instrument",
+    "limitation": "Actions are hypothetical; recorded outcomes are not attributed to this policy.",
+    "mode": "shadow",
+    "outcome_assessed": false,
+    "policy": {
+      "id": "synthetic-filtered-coordinate-policy",
+      "version": "1"
+    },
+    "recording_sha256": "175fda1b6e1fac27966885ad9970c123ca5959aeaaca2c0f76ce38f28cc3c0d5",
+    "samples": [
+      {
+        "available_ns": 1250000,
+        "hypothetical_command": [
+          -5.000000000000001e-11,
+          5.000000000000001e-11
+        ],
+        "sample_index": 0
+      },
+      {
+        "available_ns": 3250000,
+        "hypothetical_command": [
+          -2.5e-10,
+          2.5e-10
+        ],
+        "sample_index": 1
+      },
+      {
+        "available_ns": 6250000,
+        "hypothetical_command": [
+          -4.500000000000001e-10,
+          4.500000000000001e-10
+        ],
+        "sample_index": 2
+      }
+    ],
+    "stream_id": "pair-means"
+  },
+  "source_calibration_epoch_ids": [
+    "response-v1",
+    "response-v1",
+    "response-v1"
+  ],
+  "source_recording_sha256": "4cd38b1958e79fb1b74086edd6d043659f855b13f09cb38eff319a1969decdfa",
+  "support_indices": [
+    [
+      0,
+      1
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      4,
+      5
+    ]
+  ],
+  "unknown_output_availability": {
+    "policy_calls": 0,
+    "status": "withheld"
+  }
+}

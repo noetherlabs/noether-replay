@@ -1,0 +1,33 @@
+{
+  "artifacts": [
+    {
+      "bytes": 3102,
+      "file": "conditioned-observations.json",
+      "sha256": "e59a9eeb42115f6c47b9423816e93ed98ad0b6fa8bf587d273778a187f242eed"
+    }
+  ],
+  "environment": {
+    "machine": "arm64",
+    "packages": {
+      "noether-ao-replay": "0.1.0",
+      "numpy": "2.4.6"
+    },
+    "python": "3.11.15",
+    "system": "Darwin"
+  },
+  "evidence_scope": "Synthetic software example with declared covariance and event times; no instrument or controller-performance result.",
+  "implementation_commit": "311b310ccce3c45c0d13516cdf913d0bd61e3dc3",
+  "reproduction": "Output generated twice from the installed wheel and compared byte-for-byte. Cross-platform floating-point identity is not assumed.",
+  "schema": "noether-replay-conditioned-example/1",
+  "sources": [
+    {
+      "file": "examples/synthetic.json",
+      "sha256": "aa33616d9ff867e4808eddae98a0ee60b425c1157043535a9a146a008b46fd89"
+    },
+    {
+      "file": "examples/conditioned_observations.py",
+      "sha256": "ca743fd2118de8d3fb8683d6a4096fe1b684954fcbb13fa121de25c1022a6905"
+    }
+  ],
+  "wheel_sha256": "deb70010b827474e3031c71f9669854553f80d253f8d3312a65c239148aa4fe7"
+}

@@ -6,8 +6,9 @@ the effect of noise correlations on preprocessing uncertainty. None measures the
 performance of an alternative closed-loop controller.
 
 Retained JSON and Markdown outputs are in [examples/reports](../examples/reports).
-Their [manifest](../examples/reports/manifest.json) binds each output to its
-source digest, implementation commit and dependency versions. Each was generated
+Their [original manifest](../examples/reports/manifest.json) and the
+[conditioned-window manifest](../examples/reports/conditioned-observations-manifest.json)
+bind each output to its source digest, implementation commit and dependency versions. Each was generated
 twice from the installed package and compared byte-for-byte in the recorded
 environment. Cross-platform floating-point bitwise identity is not assumed.
 
@@ -109,3 +110,5 @@ completion times allow three hypothetical policy commands. A second window with
 unknown completion times and a window spanning calibration expiry are both
 withheld before policy execution. Neither withholding nor successful shadow
 execution measures closed-loop performance.
+The [retained output](../examples/reports/conditioned-observations.json) includes
+the full joint covariance, source support and both withheld cases.

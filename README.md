@@ -61,9 +61,11 @@ and [reproducible examples](docs/examples.md).
 | [Synthetic event reconstruction](examples/reports/synthetic.md) | 72 known events; an omitted frame identifier; four observations outside calibration validity. |
 | [Public PAPYRUS recording](examples/reports/papyrus.md) | Three 200-sample telemetry arrays imported. Event times are absent, so no exact event sequence is inferred. |
 | [Correlated-noise conditioning](examples/reports/conditioning.json) | In the declared synthetic AR(1) case, ignoring temporal correlation understates the variance after averaging by 44.44%. |
+| [Conditioned observation windows](examples/reports/conditioned-observations.json) | Three synthetic pair means support hypothetical commands; unknown availability and calibration expiry each prevent policy execution. |
 
 The [example manifest](examples/reports/manifest.json) records the implementation
 commit, input digests, dependency versions and output digests.
+The conditioned-window example has a separate [reproduction manifest](examples/reports/conditioned-observations-manifest.json).
 
 ## Scientific scope
 
