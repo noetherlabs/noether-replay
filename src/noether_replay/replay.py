@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import hashlib
-from typing import Callable
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass
+from types import MappingProxyType
+from typing import Any, Literal
 
 import numpy as np
 
@@ -98,21 +101,109 @@ def _calibration_assignment(recording: Recording, stream: Stream, index: int) ->
     return matches[0] if len(matches) == len(overlaps) == 1 else None
 
 
+@dataclass(frozen=True, slots=True, eq=False)
+class ShadowObservation:
+    """Current shadow input with immutable metadata and an isolated value copy.
+
+    ``values`` is writable for policy-local processing; it never shares memory
+    with the recording. Other fields and nested mappings/tuples are immutable.
+    Calibration products are temporally applicable references, not validated
+    physical models. Conditioning metadata describes only this output's support;
+    it is not a covariance, whitening or likelihood contract.
+
+    This is an interface for trusted Python callbacks, not a sandbox. A callback
+    that separately holds the source recording can still access or mutate it.
+    """
+
+    values: np.ndarray
+    stream_id: str
+    sample_index: int
+    frame_id: int | None
+    units: str | None
+    clock_id: str
+    available_ns: int
+    uncertainty_ns: int
+    exposure_start_ns: int | None
+    exposure_end_ns: int | None
+    calibration_epoch_id: str | None
+    calibration_products: Mapping[str, str]
+    conditioning: Mapping[str, Any] | None
+
+
+def _freeze_metadata(value: Any) -> Any:
+    """Detach the selected metadata while making every nested container immutable."""
+    if isinstance(value, dict):
+        return MappingProxyType({key: _freeze_metadata(item) for key, item in value.items()})
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze_metadata(item) for item in value)
+    if isinstance(value, np.integer):
+        return int(value)
+    return value
+
+
+def _shadow_observation(recording: Recording, stream: Stream, index: int) -> ShadowObservation:
+    """Build only the current input after the complete recording passed admission."""
+    epoch_id = _calibration_assignment(recording, stream, index)
+    products = next(
+        (epoch["products"] for epoch in recording.calibrations if epoch["id"] == epoch_id), {}
+    )
+    descriptor = stream.metadata.get("conditioning")
+    conditioning = None
+    if descriptor is not None:
+        conditioning = _freeze_metadata(
+            {
+                "source_recording_sha256": descriptor["source_recording_sha256"],
+                "source_stream_id": descriptor["source_stream_id"],
+                "support_indices": descriptor["support_indices"][index],
+                "channel_indices": descriptor["channel_indices"],
+                "weights": [value for value in descriptor["operator"][index] if value != 0],
+                "contributing_exposures": descriptor["contributing_exposures"][index],
+                "ready_not_before_ns": descriptor["ready_not_before_ns"][index],
+            }
+        )
+
+    def time(stage: str) -> int | None:
+        times = stream.times_ns.get(stage)
+        value = None if times is None else times[index]
+        return None if value is None else int(value)
+
+    return ShadowObservation(
+        values=stream.values[index].copy(),
+        stream_id=stream.id,
+        sample_index=index,
+        frame_id=None if stream.frame_ids is None else int(stream.frame_ids[index]),
+        units=stream.units,
+        clock_id=stream.clock_id,
+        available_ns=int(stream.times_ns["available"][index]),
+        uncertainty_ns=int(stream.uncertainty_ns),
+        exposure_start_ns=time("exposure_start"),
+        exposure_end_ns=time("exposure_end"),
+        calibration_epoch_id=epoch_id,
+        calibration_products=_freeze_metadata(products),
+        conditioning=conditioning,
+    )
+
+
 def run_shadow(
     recording: Recording,
     stream_id: str,
-    policy: Callable[[np.ndarray], np.ndarray],
+    policy: Callable[[np.ndarray], np.ndarray] | Callable[[ShadowObservation], np.ndarray],
     *,
     policy_id: str,
     policy_version: str,
+    policy_input: Literal["array", "event"] = "array",
 ) -> dict:
     """Evaluate hypothetical actions on causally ordered recorded observations.
 
-    The policy receives a copy of each observation in availability order. It
-    cannot change the stored plant trajectory. Outcome metrics are deliberately
-    absent; a different action's closed-loop effect requires a validated plant.
+    The default policy receives an array copy. With ``policy_input="event"`` it
+    receives a ShadowObservation with current timing, identity and calibration
+    context. Both use the same admission gates and availability order. No future
+    values or full Recording are passed through either interface. Outcome metrics
+    are absent; a different action's closed-loop effect requires a validated plant.
     """
     recording.validate()
+    if not isinstance(policy_input, str) or policy_input not in ("array", "event"):
+        raise ValueError("Shadow policy input must be 'array' or 'event'")
     if not all(isinstance(value, str) and value.strip() for value in (policy_id, policy_version)):
         raise ValueError("Shadow policy requires a nonempty ID and version")
     streams = [s for s in recording.streams if s.id == stream_id]
@@ -154,7 +245,12 @@ def run_shadow(
     shape = None
     before = recording.digest()
     for index in order:
-        action = np.asarray(policy(stream.values[index].copy()))
+        observation = (
+            _shadow_observation(recording, stream, index)
+            if policy_input == "event"
+            else stream.values[index].copy()
+        )
+        action = np.asarray(policy(observation))
         if (
             action.dtype.kind not in "biuf"
             or action.ndim != 1
@@ -174,7 +270,7 @@ def run_shadow(
         )
     if recording.digest() != before:
         raise ValueError("Recording changed during shadow evaluation")
-    return {
+    result = {
         "mode": "shadow",
         "policy": {"id": policy_id, "version": policy_version},
         "recording_sha256": before,
@@ -184,3 +280,6 @@ def run_shadow(
         "outcome_assessed": False,
         "limitation": "Actions are hypothetical; recorded outcomes are not attributed to this policy.",
     }
+    if policy_input == "event":
+        result["policy_input"] = "event"
+    return result

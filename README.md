@@ -48,7 +48,7 @@ never overwritten.
 | Event reconstruction | Separates exposure, observation availability, controller completion, command issue and actuator effect. Reports ambiguous order and unsynchronized clocks. |
 | Calibration epochs | Assigns an epoch only when it uniquely covers the complete exposure and its timing uncertainty. |
 | Evidence binding | Hashes array dtype, shape and exact bytes together with timing, calibration and source metadata. |
-| Shadow policies | Computes hypothetical commands from ordered observations without assigning recorded outcomes to those commands. |
+| Shadow policies | Computes hypothetical commands from ordered observations, with optional current-event timing and calibration context, without assigning recorded outcomes to those commands. |
 | Noise conditioning | Propagates temporal and cross-channel covariance; binds filtered windows to source samples, availability constraints and calibration epochs. |
 
 See the [data contract](docs/data-contract.md), [evaluation modes](docs/evaluation-modes.md)
@@ -92,6 +92,7 @@ python -m pytest -q
 ruff check .
 python examples/conditioning.py
 python examples/conditioned_observations.py
+python examples/shadow_events.py
 ```
 
 Tests cover actual AOT FITS round trips, missing metadata, calibration boundaries,
