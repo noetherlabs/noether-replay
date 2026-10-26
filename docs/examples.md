@@ -1,8 +1,8 @@
 # Reproducible examples
 
-The examples exercise three different questions: reconstruction with complete
-synthetic event metadata, qualification of incomplete instrument telemetry, and
-the effect of noise correlations on preprocessing uncertainty. None measures the
+The examples cover reconstruction with complete synthetic event metadata,
+qualification of incomplete instrument telemetry, command timing, and the effect
+of noise correlations on preprocessing uncertainty. None measures the
 performance of an alternative closed-loop controller.
 
 Retained JSON and Markdown outputs are in [examples/reports](../examples/reports).
@@ -112,3 +112,17 @@ withheld before policy execution. Neither withholding nor successful shadow
 execution measures closed-loop performance.
 The [retained output](../examples/reports/conditioned-observations.json) includes
 the full joint covariance, source support and both withheld cases.
+
+## Applied-command timing
+
+```sh
+python examples/command_timing.py
+```
+
+This analytical fixture declares observation-to-command associations and exact
+integer timestamp bounds. Its seven applied commands include met and exceeded
+budgets, ambiguous timing, contradictory causal order, a missing effect time and
+an omitted association. Every command remains in the report. The 20 ns budget
+is a fixture value, not an instrument requirement or measured execution latency.
+See the [timing contract](command-timing.md) for interval arithmetic, admission
+requirements and the distinction from total sensor-to-actuator latency.
