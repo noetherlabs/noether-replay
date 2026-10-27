@@ -126,3 +126,17 @@ an omitted association. Every command remains in the report. The 20 ns budget
 is a fixture value, not an instrument requirement or measured execution latency.
 See the [timing contract](command-timing.md) for interval arithmetic, admission
 requirements and the distinction from total sensor-to-actuator latency.
+
+## Exposure-integrated probe response
+
+```sh
+python examples/probe_response.py
+```
+
+This analytical fixture recovers a fixed-frequency response with offset 2,
+cosine coefficient 3 and sine coefficient 4, giving amplitude 5. A midpoint-only
+comparator shows the predicted finite-exposure attenuation. Removing an exposure
+endpoint withholds the complete twelve-sample window and retains its identity.
+The supplied noise covariance is synthetic; timing bounds remain distinct from
+conditional coefficient uncertainty. See the [probe-response contract](probe-response.md)
+for assumptions, numerical admission and the limits of closed-loop identification.
