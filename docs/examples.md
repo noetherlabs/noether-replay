@@ -8,9 +8,12 @@ performance of an alternative closed-loop controller.
 Retained JSON and Markdown outputs are in [examples/reports](../examples/reports).
 Their [original manifest](../examples/reports/manifest.json) and the
 [conditioned-window manifest](../examples/reports/conditioned-observations-manifest.json)
-bind each output to its source digest, implementation commit and dependency versions. Each was generated
-twice from the installed package and compared byte-for-byte in the recorded
-environment. Cross-platform floating-point bitwise identity is not assumed.
+bind their outputs to source digests, implementation commits and dependency versions.
+Those artifacts were generated twice from the installed package and compared
+byte-for-byte in the recorded environment. The later
+[CIAO manifest](../examples/reports/ciao-manifest.json) separately records its
+source-based execution and verification. Cross-platform floating-point bitwise
+identity is not assumed.
 
 ## Synthetic event reconstruction
 
@@ -70,6 +73,21 @@ The [retained report](../examples/reports/papyrus.md) and
 [machine-readable output](../examples/reports/papyrus.json) contain 17 findings
 about missing evidence across the three streams; these are not 17 demonstrated
 instrument faults.
+
+## Public CIAO multirate recording
+
+The CIAO1 example from the same public AOT dataset contains 15,000 loop samples
+and 316 pixel frames. Of the pixel counter values, 299 also occur in the loop
+record and 17 exceed its final counter. Pixel counters advance by 50; the
+intervening integers are not evidence of dropped exposures without the counter
+contract. Counter overlap alone does not establish observation-to-command lineage.
+
+Generic loop timestamps are retained, but exposure, availability and actuator
+stages remain unknown. Commands remain `command_recorded`, so applied-command
+timing qualification is refused. See the [source attribution and bounded
+reproduction](ciao-example.md), [retained report](../examples/reports/ciao.md),
+[JSON report](../examples/reports/ciao.json) and
+[counter coverage](../examples/reports/ciao-coverage.json).
 
 ## Correlated-noise conditioning
 

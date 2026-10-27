@@ -1,0 +1,206 @@
+{
+  "clock_domains": [],
+  "event_count": 0,
+  "findings": [
+    {
+      "code": "unknown_units",
+      "count": 1,
+      "detail": "Physical units are not established by the source.",
+      "stream_id": "loop:HO Loop:commands"
+    },
+    {
+      "code": "unknown_clock_uncertainty",
+      "count": 1,
+      "detail": "Nominal timestamps cannot establish an exact causal ordering.",
+      "stream_id": "loop:HO Loop:commands"
+    },
+    {
+      "code": "missing_event_times",
+      "count": 15000,
+      "detail": "These samples have no exposure, availability or actuation event times.",
+      "stream_id": "loop:HO Loop:commands"
+    },
+    {
+      "code": "unknown_command_semantics",
+      "count": 15000,
+      "detail": "The source does not establish whether these commands were requested or physically applied.",
+      "stream_id": "loop:HO Loop:commands"
+    },
+    {
+      "code": "unknown_units",
+      "count": 1,
+      "detail": "Physical units are not established by the source.",
+      "stream_id": "loop:TT Loop:commands"
+    },
+    {
+      "code": "unknown_clock_uncertainty",
+      "count": 1,
+      "detail": "Nominal timestamps cannot establish an exact causal ordering.",
+      "stream_id": "loop:TT Loop:commands"
+    },
+    {
+      "code": "missing_event_times",
+      "count": 15000,
+      "detail": "These samples have no exposure, availability or actuation event times.",
+      "stream_id": "loop:TT Loop:commands"
+    },
+    {
+      "code": "unknown_command_semantics",
+      "count": 15000,
+      "detail": "The source does not establish whether these commands were requested or physically applied.",
+      "stream_id": "loop:TT Loop:commands"
+    },
+    {
+      "code": "unknown_units",
+      "count": 1,
+      "detail": "Physical units are not established by the source.",
+      "stream_id": "wfs:WFS:measurements"
+    },
+    {
+      "code": "unknown_clock_uncertainty",
+      "count": 1,
+      "detail": "Nominal timestamps cannot establish an exact causal ordering.",
+      "stream_id": "wfs:WFS:measurements"
+    },
+    {
+      "code": "missing_event_times",
+      "count": 15000,
+      "detail": "These samples have no exposure, availability or actuation event times.",
+      "stream_id": "wfs:WFS:measurements"
+    },
+    {
+      "code": "missing_availability",
+      "count": 15000,
+      "detail": "Causal controller replay requires observation availability, not just sampling frequency.",
+      "stream_id": "wfs:WFS:measurements"
+    },
+    {
+      "code": "unqualified_calibration_interval",
+      "count": 15000,
+      "detail": "No unique calibration epoch covers the complete exposure and timing uncertainty.",
+      "stream_id": "wfs:WFS:measurements"
+    },
+    {
+      "code": "unknown_units",
+      "count": 1,
+      "detail": "Physical units are not established by the source.",
+      "stream_id": "wfs:WFS:pixels"
+    },
+    {
+      "code": "unknown_clock_uncertainty",
+      "count": 1,
+      "detail": "Nominal timestamps cannot establish an exact causal ordering.",
+      "stream_id": "wfs:WFS:pixels"
+    },
+    {
+      "code": "missing_event_times",
+      "count": 316,
+      "detail": "These samples have no exposure, availability or actuation event times.",
+      "stream_id": "wfs:WFS:pixels"
+    },
+    {
+      "code": "missing_availability",
+      "count": 316,
+      "detail": "Causal controller replay requires observation availability, not just sampling frequency.",
+      "stream_id": "wfs:WFS:pixels"
+    },
+    {
+      "code": "frame_id_gaps",
+      "count": 15435,
+      "detail": "Unrepresented integer frame IDs; this is not proof of detector frame loss without the counter contract.",
+      "stream_id": "wfs:WFS:pixels"
+    },
+    {
+      "code": "unqualified_calibration_interval",
+      "count": 316,
+      "detail": "No unique calibration epoch covers the complete exposure and timing uncertainty.",
+      "stream_id": "wfs:WFS:pixels"
+    }
+  ],
+  "limitations": [
+    "Recording consistency is not instrument qualification or controller validation.",
+    "Calibration hashes bind references; calibration accuracy is not tested.",
+    "Recorded closed-loop outcomes cannot evaluate a different controller.",
+    "Hashes establish content consistency, not source authenticity."
+  ],
+  "mode": "observational",
+  "recording_id": "CIAO",
+  "recording_sha256": "e50cf64d4dd348f26239f17d777570df2792393f1f7232b79d4317a9370751a2",
+  "schema": "noether-replay-report/1",
+  "software_version": "0.1.0",
+  "source": {
+    "adapter": "noether_replay.aot",
+    "adapter_version": "1",
+    "aotpy_version": "3.2.1",
+    "format": "AOT FITS",
+    "source_bytes": 19751040,
+    "source_sha256": "cd9e05a65c90e459df28fb8c2d4671381a08060d10b012c472dc41a6bdfd3d0e",
+    "timing_policy": "Source timestamps retained; event times and clock uncertainty not inferred"
+  },
+  "status": "evidence_gaps",
+  "streams": [
+    {
+      "calibration_covered_samples": null,
+      "dtype": ">f4",
+      "id": "loop:HO Loop:commands",
+      "kind": "command_recorded",
+      "known_event_times": {},
+      "nonfinite_values": 0,
+      "samples": 15000,
+      "shape": [
+        15000,
+        60
+      ],
+      "units": null,
+      "unrepresented_frame_ids": 0
+    },
+    {
+      "calibration_covered_samples": null,
+      "dtype": ">f4",
+      "id": "loop:TT Loop:commands",
+      "kind": "command_recorded",
+      "known_event_times": {},
+      "nonfinite_values": 0,
+      "samples": 15000,
+      "shape": [
+        15000,
+        2
+      ],
+      "units": null,
+      "unrepresented_frame_ids": 0
+    },
+    {
+      "calibration_covered_samples": 0,
+      "dtype": ">f4",
+      "id": "wfs:WFS:measurements",
+      "kind": "wfs_measurements",
+      "known_event_times": {},
+      "nonfinite_values": 0,
+      "samples": 15000,
+      "shape": [
+        15000,
+        2,
+        68
+      ],
+      "units": null,
+      "unrepresented_frame_ids": 0
+    },
+    {
+      "calibration_covered_samples": 0,
+      "dtype": "<u2",
+      "id": "wfs:WFS:pixels",
+      "kind": "wfs_pixels",
+      "known_event_times": {},
+      "nonfinite_values": 0,
+      "samples": 316,
+      "shape": [
+        316,
+        72,
+        72
+      ],
+      "units": null,
+      "unrepresented_frame_ids": 15435
+    }
+  ],
+  "timeline_sha256": "126db27f51d6e0de5bca26d7ee75434e5f6d40efa071457b4e2ecc0c0befb836"
+}

@@ -1,0 +1,63 @@
+{
+  "artifacts": [
+    {
+      "bytes": 6328,
+      "file": "ciao.json",
+      "sha256": "fac4c08dfa20d09e0b3474d211b6179eea55a94b045bec8705806d6bcd91b6db"
+    },
+    {
+      "bytes": 3367,
+      "file": "ciao.md",
+      "sha256": "ad22f66536dd653a6b75bc58b87c293d06e04b54421764619e189064c2ddced8"
+    },
+    {
+      "bytes": 1264,
+      "file": "ciao-coverage.json",
+      "sha256": "6bbd205035881a1aba7de7407e743cc1dc46bb780cbc3cefff3aaac8f6b5b2d5"
+    }
+  ],
+  "environment": {
+    "execution": "Python source import at the recorded implementation commit; no installed-wheel claim.",
+    "machine": "arm64",
+    "packages": {
+      "aotpy": "3.2.1",
+      "astropy": "8.0.1",
+      "numpy": "2.4.6"
+    },
+    "python": "3.11.15",
+    "system": "Darwin"
+  },
+  "evidence_scope": "Observational qualification and counter coverage for one public CIAO1 AOT example. No instrument fault, lost-exposure, calibration-accuracy or controller-performance claim.",
+  "implementation_commit": "0176f741a8c93dcbf727370f198e4641e3c21ace",
+  "schema": "noether-replay-ciao-example/1",
+  "source": {
+    "bytes": 19751040,
+    "changes": "Original source bytes unchanged. This repository retains derived metadata and qualification summaries, not the FITS recording.",
+    "creators": [
+      "Tiago Gomes",
+      "Paulo Garcia",
+      "Carlos Correia",
+      "Nuno Moruj\u00e3o"
+    ],
+    "doi": "10.5281/zenodo.8192742",
+    "file": "CIAO1_2019-12-06_DATA_EXPO-015808.fits",
+    "kind": "public instrument demonstration recording",
+    "license": "CC-BY-4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "provenance": "Zenodo authors describe CIAO data from ESO programme 60.A-9278(C), translated through aotpy. Original file bytes preserved.",
+    "publication_date": "2023-07-28",
+    "published_md5": "069b37b24997bf55c5312a7bad469502",
+    "sha256": "cd9e05a65c90e459df28fb8c2d4671381a08060d10b012c472dc41a6bdfd3d0e",
+    "title": "Proof-of-concept AO telemetry data using the AOT standard format",
+    "url": "https://zenodo.org/api/records/8192742/files/CIAO1_2019-12-06_DATA_EXPO-015808.fits/content",
+    "verified_md5": "069b37b24997bf55c5312a7bad469502"
+  },
+  "source_files_sha256": {
+    "src/noether_replay/aot.py": "02335bf835e10ad8ece31211188e90e1be0b1be7c0fdfd9eda41f9f04a403aa5",
+    "src/noether_replay/model.py": "30b80c0cb23721c7a53532fb6d4e23ede53a9fcce15043bf6c6f2cde3e0c0f4c",
+    "src/noether_replay/replay.py": "82339b8f06e04c5c4b0421c947358b5c3ee8b35549b698e07565deafe851d527",
+    "src/noether_replay/report.py": "da273b0faa62b169361f6e49e4724c8a70bbb91a2b1d1182d5bc73d00b27db6d",
+    "src/noether_replay/timing.py": "c91ea240ea08612736601e45de8410063f5baee88e70d00a1abec89d8edef814"
+  },
+  "verification": "Original file size, published MD5 and computed SHA-256 verified. Repeated report construction and one CLI JSON execution agree with the retained report; Markdown agrees byte-for-byte. Counter coverage and recorded-command refusals recomputed independently from the imported recording. Cross-platform bitwise identity is not assumed."
+}

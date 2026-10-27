@@ -1,0 +1,45 @@
+{
+  "interpretation": "Counter-set overlap only; no inferred exposure loss, physical event correspondence or observation-to-command association.",
+  "loop_counter_max": 230826,
+  "loop_counter_min": 215827,
+  "loop_counter_steps": [
+    1
+  ],
+  "loop_samples": 15000,
+  "loop_stream_id": "wfs:WFS:measurements",
+  "outside_pixel_counter_values": [
+    230850,
+    230900,
+    230950,
+    231000,
+    231050,
+    231100,
+    231150,
+    231200,
+    231250,
+    231300,
+    231350,
+    231400,
+    231450,
+    231500,
+    231550,
+    231600,
+    231650
+  ],
+  "pixel_counter_max": 231650,
+  "pixel_counter_min": 215900,
+  "pixel_counter_steps": [
+    50
+  ],
+  "pixel_counter_values_in_loop_set": 299,
+  "pixel_counter_values_outside_loop_set": 17,
+  "pixel_samples": 316,
+  "pixel_stream_id": "wfs:WFS:pixels",
+  "recorded_command_timing_refusals": {
+    "loop:HO Loop:commands": "Timing qualification requires a command_applied stream",
+    "loop:TT Loop:commands": "Timing qualification requires a command_applied stream"
+  },
+  "recording_sha256": "e50cf64d4dd348f26239f17d777570df2792393f1f7232b79d4317a9370751a2",
+  "schema": "noether-replay-counter-coverage-example/1",
+  "source_sha256": "cd9e05a65c90e459df28fb8c2d4671381a08060d10b012c472dc41a6bdfd3d0e"
+}
