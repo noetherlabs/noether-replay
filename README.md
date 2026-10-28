@@ -59,6 +59,10 @@ See the [data contract](docs/data-contract.md), [evaluation modes](docs/evaluati
 [probe response](docs/probe-response.md)
 and [reproducible examples](docs/examples.md).
 
+The [decision-evidence examples](docs/decision-evidence.md) show exact cases where
+gain or applied-command value remains unidentified, and which independent
+measurement resolves each ambiguity.
+
 ## Retained examples
 
 | Example | Result |
@@ -102,6 +106,7 @@ python examples/conditioned_observations.py
 python examples/shadow_events.py
 python examples/command_timing.py
 python examples/input_freshness.py
+python examples/decision_evidence.py
 python examples/probe_response.py
 ```
 
