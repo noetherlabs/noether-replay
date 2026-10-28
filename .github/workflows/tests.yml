@@ -23,4 +23,5 @@ jobs:
       - run: python examples/conditioning.py
       - run: python examples/conditioned_observations.py
       - run: python examples/command_timing.py
+      - run: python examples/input_freshness.py
       - run: python examples/probe_response.py

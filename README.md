@@ -47,6 +47,7 @@ never overwritten.
 | AOT import | Retains source arrays, units, frame identifiers and available metadata through `aotpy`. Missing event semantics remain unknown. |
 | Event reconstruction | Separates exposure, observation availability, controller completion, command issue and actuator effect. Reports ambiguous order and unsynchronized clocks. |
 | Applied-command timing | Checks explicit observation-to-command associations against uncertainty bounds and a declared availability-to-effect latency budget; retains commands with missing evidence. |
+| Input freshness | Bounds the oldest exposure support behind each command, including every contributing raw sample in filtered observations. Keeps stale and missing evidence visible. |
 | Calibration epochs | Assigns an epoch only when it uniquely covers the complete exposure and its timing uncertainty. |
 | Evidence binding | Hashes array dtype, shape and exact bytes together with timing, calibration and source metadata. |
 | Shadow policies | Computes hypothetical commands from ordered observations, with optional current-event timing and calibration context, without assigning recorded outcomes to those commands. |
@@ -54,7 +55,8 @@ never overwritten.
 | Probe-response qualification | Fits an exposure-integrated offset and two quadratures with full noise covariance; withholds windows with insufficient timing, calibration or numerical support. |
 
 See the [data contract](docs/data-contract.md), [evaluation modes](docs/evaluation-modes.md),
-[command timing](docs/command-timing.md), [probe response](docs/probe-response.md)
+[command timing](docs/command-timing.md), [input freshness](docs/input-freshness.md),
+[probe response](docs/probe-response.md)
 and [reproducible examples](docs/examples.md).
 
 ## Retained examples
@@ -99,6 +101,7 @@ python examples/conditioning.py
 python examples/conditioned_observations.py
 python examples/shadow_events.py
 python examples/command_timing.py
+python examples/input_freshness.py
 python examples/probe_response.py
 ```
 
