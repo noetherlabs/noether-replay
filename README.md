@@ -46,7 +46,7 @@ never overwritten.
 | --- | --- |
 | AOT import | Retains source arrays, units, frame identifiers and available metadata through `aotpy`. Missing event semantics remain unknown. |
 | Event reconstruction | Separates exposure, observation availability, controller completion, command issue and actuator effect. Reports ambiguous order and unsynchronized clocks. |
-| Applied-command timing | Checks explicit observation-to-command associations against uncertainty bounds and a declared availability-to-effect latency budget; retains commands with missing evidence. |
+| Applied-command timing | Checks explicit dependencies and availability-to-effect latency bounds; optionally consumes an external bounded clock-conversion receipt. Retains commands with missing evidence. |
 | Input freshness | Bounds the oldest exposure support behind each command, including every contributing raw sample in filtered observations. Keeps stale and missing evidence visible. |
 | Calibration epochs | Assigns an epoch only when it uniquely covers the complete exposure and its timing uncertainty. |
 | Evidence binding | Hashes array dtype, shape and exact bytes together with timing, calibration and source metadata. |

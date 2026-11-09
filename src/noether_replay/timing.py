@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import hashlib
 
+from ._clock import _bounded_json, convert_interval, normalize_conversion
 from .model import MAX_JSON_BYTES, Recording, Stream, _integer, canonical_json
 
 SCHEMA = "noether-replay-command-timing/1"
+CONVERSION_SCHEMA = "noether-replay-command-timing/2"
 _CAUSAL = ("consistent", "violated", "ambiguous", "not_established")
 _BUDGET = ("met", "exceeded", "ambiguous", "not_established", "not_requested")
 
@@ -86,6 +88,7 @@ def qualify_command_timing(
     applied_stream_id: str,
     associations: list,
     latency_budget_ns: int | None = None,
+    clock_conversion: dict | None = None,
 ) -> dict:
     """Assess availability-to-actuator latency for all recorded applied commands.
 
@@ -116,6 +119,13 @@ def qualify_command_timing(
     The complete JSON report is limited to 16 MiB. Oversized results raise rather
     than truncate command coverage; the caller must select a bounded recording.
     The source digest is checked again before return; this is not a concurrent lock.
+
+    An explicit clock_conversion receipt can supply a content-bound external
+    assertion mapping one observation clock to the applied-command clock. The
+    entire native availability uncertainty interval must fit its half-open
+    validity interval. Its uniform total error bound, including drift, is added
+    conservatively. This does not estimate or authenticate clock synchronization.
+    Converted reports use schema /2; None preserves the default /1 report.
     """
     source_digest = recording.digest()
     if not isinstance(applied_stream_id, str) or not applied_stream_id:
@@ -130,20 +140,42 @@ def qualify_command_timing(
         if not _integer(latency_budget_ns) or latency_budget_ns < 0:
             raise ValueError("Latency budget must be nonnegative integer nanoseconds or None")
         latency_budget_ns = int(latency_budget_ns)
+    conversion = None
+    conversion_digest = None
+    if clock_conversion is not None:
+        conversion, conversion_digest = normalize_conversion(
+            clock_conversion, source_digest, target.clock_id, MAX_JSON_BYTES,
+        )
     normalized = _associations(associations, streams, len(target.values))
+    if conversion is not None and not any(
+        streams[reference["stream_id"]].clock_id == conversion["source_clock_id"]
+        for association in normalized for reference in association["observations"]
+    ):
+        raise ValueError("Clock conversion source clock is unused by the associations")
     by_index = {item["applied_index"]: item["observations"] for item in normalized}
     configuration = {
         "applied_stream_id": applied_stream_id,
         "latency_budget_ns": latency_budget_ns,
         "associations": normalized,
     }
-    configuration_bytes = canonical_json({
+    if conversion is not None:
+        configuration.update({
+            "clock_conversion": conversion,
+            "clock_conversion_sha256": conversion_digest,
+        })
+    configuration_payload = {
         "recording_sha256": source_digest, "configuration": configuration,
-    })
+    }
+    configuration_bytes = (
+        canonical_json(configuration_payload) if conversion is None
+        else _bounded_json(configuration_payload, MAX_JSON_BYTES)
+    )
     report_bytes = len(configuration_bytes)
     if report_bytes > MAX_JSON_BYTES:
         raise ValueError("Timing report exceeds the 16 MiB JSON bound; select a bounded recording")
     commands = []
+    conversion_references = 0
+    converted_intervals = 0
     for index in range(len(target.values)):
         reasons = []
         effective = _time(target, "effective", index)
@@ -170,31 +202,57 @@ def qualify_command_timing(
             sample = reference["sample_index"]
             available = _time(source, "available", sample)
             source_uncertainty = _uncertainty(source)
+            native_interval = _interval(available, source_uncertainty)
+            uses_conversion = (
+                conversion is not None and source.clock_id == conversion["source_clock_id"]
+            )
+            comparison_interval = None
             if source.clock_id is None:
                 reasons.append("missing_observation_clock")
+            elif uses_conversion:
+                conversion_references += 1
+                if native_interval is not None:
+                    comparison_interval = convert_interval(native_interval, conversion)
+                    if comparison_interval is None:
+                        reasons.append("clock_conversion_outside_validity")
+                    else:
+                        converted_intervals += 1
             elif target.clock_id is not None and source.clock_id != target.clock_id:
                 reasons.append("cross_clock_reference")
+            elif source.clock_id == target.clock_id:
+                comparison_interval = native_interval
             if source_uncertainty is None:
                 reasons.append("unknown_observation_uncertainty")
             if available is None:
                 reasons.append("missing_availability")
             if _sequence_violation(source, sample):
                 reasons.append("event_sequence_violation")
-            observations.append({
+            observation = {
                 **reference,
                 "clock_id": source.clock_id,
                 "available_ns": available,
                 "uncertainty_ns": source_uncertainty,
-                "availability_interval_ns": _interval(available, source_uncertainty),
-            })
+                "availability_interval_ns": native_interval,
+            }
+            if conversion is not None:
+                observation.update({
+                    "comparison_clock_id": target.clock_id,
+                    "comparison_availability_interval_ns": comparison_interval,
+                    "clock_conversion_sha256": conversion_digest if uses_conversion else None,
+                })
+            observations.append(observation)
         latest = None
         latency = None
         causal = "not_established"
         budget = "not_requested" if latency_budget_ns is None else "not_established"
         if not reasons:
             # Explicit lineage -> latest availability -> effective-time interval.
+            interval_key = (
+                "availability_interval_ns" if conversion is None
+                else "comparison_availability_interval_ns"
+            )
             latest = [
-                max(item["availability_interval_ns"][bound] for item in observations)
+                max(item[interval_key][bound] for item in observations)
                 for bound in (0, 1)
             ]
             latency = [effective_interval[0] - latest[1], effective_interval[1] - latest[0]]
@@ -234,6 +292,8 @@ def qualify_command_timing(
             "budget": budget,
             "reasons": sorted(set(reasons)),
         }
+        if conversion is not None:
+            row["comparison_clock_id"] = target.clock_id
         report_bytes += len(canonical_json(row))
         if report_bytes > MAX_JSON_BYTES:
             raise ValueError("Timing report exceeds the 16 MiB JSON bound; select a bounded recording")
@@ -241,7 +301,7 @@ def qualify_command_timing(
     if recording.digest() != source_digest:
         raise ValueError("Recording changed during timing qualification")
     report = {
-        "schema": SCHEMA,
+        "schema": SCHEMA if conversion is None else CONVERSION_SCHEMA,
         "mode": "observational",
         "recording_sha256": source_digest,
         "configuration": configuration,
@@ -268,6 +328,17 @@ def qualify_command_timing(
             "Digests bind source content and declared associations, not their authenticity.",
         ],
     }
+    if conversion is not None:
+        report["summary"]["clock_conversion"] = {
+            "reference_count": conversion_references,
+            "converted_interval_count": converted_intervals,
+            "withheld_interval_count": conversion_references - converted_intervals,
+        }
+        report["limitations"].extend([
+            "Clock conversion is conditional on an external uniform total mapping-error bound, including drift.",
+            "Receipt and evidence digests bind supplied content; they do not authenticate clock instances or physical synchronization.",
+            "Only observation availability is converted; exposure age, calibration epochs, probe phase and shadow execution are unchanged.",
+        ])
     if len(canonical_json(report)) > MAX_JSON_BYTES:
         raise ValueError("Timing report exceeds the 16 MiB JSON bound; select a bounded recording")
     return report
