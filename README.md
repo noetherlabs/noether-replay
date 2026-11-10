@@ -62,6 +62,9 @@ and [reproducible examples](docs/examples.md).
 The [decision-evidence examples](docs/decision-evidence.md) show exact cases where
 gain or applied-command value remains unidentified, and which independent
 measurement resolves each ambiguity.
+The [instrument-timing walkthrough](docs/instrument-timing.md) combines bounded
+clock conversion with a readable synthetic report, retaining missing and
+ambiguous evidence for every command.
 
 ## Retained examples
 
@@ -105,6 +108,7 @@ python examples/conditioning.py
 python examples/conditioned_observations.py
 python examples/shadow_events.py
 python examples/command_timing.py
+python examples/instrument_timing.py
 python examples/input_freshness.py
 python examples/decision_evidence.py
 python examples/probe_response.py

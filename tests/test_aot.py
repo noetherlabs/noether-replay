@@ -2,8 +2,10 @@
 
 import gzip
 import hashlib
+import importlib.util
 import io
 import struct
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -96,6 +98,63 @@ def test_actual_aot_round_trip_preserves_arrays_and_unknown_event_semantics(aot_
         "unknown_command_semantics",
         "unqualified_calibration_interval",
     }
+
+
+def test_instrument_timing_example_preserves_aot_semantics_and_all_decisions(aot_file, capsys):
+    spec = importlib.util.spec_from_file_location(
+        "instrument_timing_example", Path(__file__).parents[1] / "examples" / "instrument_timing.py",
+    )
+    example = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(example)
+
+    # Imported AOT metadata -> no physical event semantics, regardless of a receipt.
+    imported = read_aot(aot_file)
+    before = imported.digest()
+    _, arguments = example.synthetic_inputs()
+    arguments["clock_conversion"]["recording_sha256"] = before
+    arguments["applied_stream_id"] = "loop:loop:commands"
+    arguments["associations"] = [{
+        "applied_index": 0,
+        "observations": [{"stream_id": "wfs:wfs:measurements", "sample_index": 0}],
+    }]
+    with pytest.raises(ValueError, match="requires a command_applied stream"):
+        example.qualify_command_timing(imported, **arguments)
+    assert imported.digest() == before
+    streams = {stream.id: stream for stream in imported.streams}
+    assert streams["loop:loop:commands"].kind == "command_recorded"
+    assert streams["wfs:wfs:measurements"].times_ns == {}
+    assert streams["wfs:wfs:measurements"].metadata["aot_time"]["timestamps_seconds"] == [
+        1.0, 2.0, 3.0,
+    ]
+
+    # Independent interval oracle: 1000 +/- 3 + 4000 +/- 4 -> [4993, 5007];
+    # subtract from 5100 +/- 2 -> [91, 109], wholly inside the 110 ns budget.
+    synthetic, arguments = example.synthetic_inputs()
+    before = synthetic.digest()
+    report = example.qualify_command_timing(synthetic, **arguments)
+    rows = report["commands"]
+    assert [row["applied_index"] for row in rows] == list(range(6))
+    assert [row["frame_id"] for row in rows] == [20, 21, 22, 23, 24, 25]
+    assert [row["latency_interval_ns"] for row in rows] == [
+        [91, 109], [111, 129], [101, 119], None, None, None,
+    ]
+    assert [row["budget"] for row in rows] == [
+        "met", "exceeded", "ambiguous", "not_established", "not_established", "not_established",
+    ]
+    assert [row["reasons"] for row in rows] == [
+        [], [], [], ["missing_availability"], ["missing_association"],
+        ["clock_conversion_outside_validity"],
+    ]
+    assert synthetic.digest() == before
+    example.main()
+    output = capsys.readouterr().out
+    assert output == example.render_review(report)
+    assert "Synthetic instrument timing review" in output
+    assert report["configuration_sha256"] in output
+    assert "All 6 commands are retained" in output
+    assert sum(line.startswith("| ") for line in output.splitlines()) == 8
+    assert "| 2 (22) | [101, 119] | consistent | ambiguous | none |" in output
+    assert "| 5 (25) | not established | not_established | not_established |" in output
 
 
 def test_missing_aot_time_does_not_invent_frame_ids_or_frequency_timestamps(tmp_path, aot_system):
